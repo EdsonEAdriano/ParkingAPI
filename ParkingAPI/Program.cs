@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ParkingAPI.Data;
+using ParkingAPI.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DatabaseContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+
+builder.Services.AddTransient<ICompanyRepository, CompanyRepository>();
+builder.Services.AddTransient<IVehicleRepository, VehicleRepository>();
 
 var app = builder.Build();
 
