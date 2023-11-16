@@ -11,5 +11,6 @@ namespace ParkingAPI.Data
 
         public DbSet<Company> Companies { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
+        public DbSet<Control> Controls { get; set; }
     }
 }
