@@ -17,6 +17,7 @@ builder.Services.AddDbContext<DatabaseContext>(
 
 builder.Services.AddTransient<ICompanyRepository, CompanyRepository>();
 builder.Services.AddTransient<IVehicleRepository, VehicleRepository>();
+builder.Services.AddTransient<IControlRepository, ControlRepository>();
 
 var app = builder.Build();
 
