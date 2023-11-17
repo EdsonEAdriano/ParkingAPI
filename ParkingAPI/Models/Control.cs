@@ -14,7 +14,8 @@ namespace ParkingAPI.Models
         [ForeignKey("vehicle")]
         public int vehicleID { get; set; }
         public Vehicle vehicle { get; set; }
-        public ControlType type { get; set; }
+        public ControlStatus status { get; set; } = ControlStatus.Parked;
         public DateTime createDate { get; set; } = DateTime.Now;
+        public DateTime exitDate { get; set; }
     }
 }
