@@ -1,8 +1,8 @@
 ﻿namespace ParkingAPI.Enums
 {
-    public enum ControlType
+    public enum ControlStatus
     {
-        Enter,
+        Parked,
         Exit
     }
 }
