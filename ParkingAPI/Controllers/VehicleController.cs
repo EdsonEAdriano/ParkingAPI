@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ParkingAPI.DTOs;
+using ParkingAPI.Helpers;
 using ParkingAPI.Models;
 using ParkingAPI.Repositories;
 
@@ -18,10 +20,27 @@ namespace ParkingAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Vehicle vehicle)
+        public async Task<IActionResult> Post([FromBody] VehicleDTO vehicleDTO)
         {
             try
             {
+                vehicleDTO.plate = vehicleDTO.plate.Trim();
+
+                if (!Plate.validatePlate(vehicleDTO.plate))
+                {
+                    _logger.LogError($"Error while adding new vehicle. ERROR MESSAGE: Plate is not valid; ");
+                    return BadRequest("Placa não é valida.");
+                }
+
+                if (! await _vehicleRepository.existsPlate(vehicleDTO.plate))
+                {
+                    _logger.LogError($"Error while adding new vehicle. ERROR MESSAGE: Plate already exists; ");
+                    return BadRequest("Placa já existe.");
+                }
+               
+
+                Vehicle vehicle = new Vehicle(vehicleDTO);
+
                 await _vehicleRepository.add(vehicle);
                 _logger.LogTrace("Veículo adicionado.");
                 return Ok(vehicle);
@@ -29,7 +48,7 @@ namespace ParkingAPI.Controllers
             catch (Exception e)
             {
                 _logger.LogError($"Error while adding new vehicle. ERROR MESSAGE: {e.Message}; ");
-                return BadRequest(vehicle);
+                return BadRequest(vehicleDTO);
             }
         }
 
@@ -65,10 +84,33 @@ namespace ParkingAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put([FromBody] Vehicle vehicle)
+        [Route("{id}")]
+        public async Task<IActionResult> Put(int id, [FromBody] VehicleDTO vehicleDTO)
         {
             try
             {
+                Vehicle vehicle = await _vehicleRepository.get(id);
+
+                if (vehicleDTO.plate != vehicle.plate)
+                {
+                    vehicleDTO.plate = vehicleDTO.plate.Trim();
+
+                    if (!Plate.validatePlate(vehicleDTO.plate))
+                    {
+                        _logger.LogError($"Error while adding new vehicle. ERROR MESSAGE: Plate is not valid; ");
+                        return BadRequest("Placa não é valida.");
+                    }
+
+                    if (await _vehicleRepository.existsPlate(vehicleDTO.plate))
+                    {
+                        _logger.LogError($"Error while updating vehicle. ERROR MESSAGE: Plate already exists; ");
+                        return BadRequest("Placa já existe.");
+                    }
+                }
+
+                                
+                vehicle = new Vehicle(id, vehicleDTO);
+
                 var companyEdit = await _vehicleRepository.edit(vehicle);
                 return Ok(companyEdit);
             }
@@ -85,8 +127,15 @@ namespace ParkingAPI.Controllers
         {
             try
             {
-                var vehicle = await _vehicleRepository.remove(id);
-                return Ok(vehicle);
+                if (await _vehicleRepository.exists(id))
+                {
+                    var vehicle = await _vehicleRepository.remove(id);
+                    return Ok(vehicle);
+                }
+                else {
+                    _logger.LogError($"Error while removing vehicle. ERROR MESSAGE: Vehicle not exists; ");
+                    return BadRequest($"Veículo não existe");
+                }
             }
             catch (Exception e)
             {
