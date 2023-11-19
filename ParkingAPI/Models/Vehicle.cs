@@ -1,4 +1,5 @@
-﻿using ParkingAPI.Enums;
+﻿using ParkingAPI.DTOs;
+using ParkingAPI.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace ParkingAPI.Models
@@ -12,5 +13,29 @@ namespace ParkingAPI.Models
         public string color { get; set; }
         public string plate { get; set; }
         public VehicleType type { get; set; }
+
+        public Vehicle()
+        {
+
+        }
+
+        public Vehicle(VehicleDTO vehicleDTO)
+        {
+            this.brand = vehicleDTO.brand;
+            this.model = vehicleDTO.model;
+            this.color = vehicleDTO.color;
+            this.plate = vehicleDTO.plate;
+            this.type = vehicleDTO.type;
+        }
+
+        public Vehicle(int id, VehicleDTO vehicleDTO)
+        {
+            this.id = id;   
+            this.brand = vehicleDTO.brand;
+            this.model = vehicleDTO.model;
+            this.color = vehicleDTO.color;
+            this.plate = vehicleDTO.plate;
+            this.type = vehicleDTO.type;
+        }
     }
 }
