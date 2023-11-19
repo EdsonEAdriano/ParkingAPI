@@ -44,5 +44,15 @@ namespace ParkingAPI.Repositories
         {
             return await _context.Companies.FirstOrDefaultAsync(company => company.id == id);
         }
+
+        public async Task<bool> exists(long id)
+        {
+            return await _context.Companies.AnyAsync(c => c.id == id);
+        }
+
+        public async Task<bool> existsCNPJ(long cnpj)
+        {
+            return await _context.Companies.AnyAsync(c => c.cnpj == cnpj);
+        }
     }
 }

@@ -10,5 +10,8 @@ namespace ParkingAPI.Repositories
         Task<Control> add(ControlDTO controlDTO);
         Task<Control> exit(int id);
         Task<Control> remove(int id);
+        public Task<bool> exists(int id);
+        public Task<bool> isParkedByDTO(ControlDTO controlDTO);
+        public Task<bool> isParked(int id);
     }
 }

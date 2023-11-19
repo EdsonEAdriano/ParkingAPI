@@ -60,5 +60,24 @@ namespace ParkingAPI.Repositories
 
             return control;
         }
+
+        public async Task<bool> exists(int id)
+        {
+            return await _context.Controls.AnyAsync(c => c.id == id); 
+        }
+
+        public async Task<bool> isParked(int id)
+        {
+            return await _context.Controls.AnyAsync(c => c.id == id && c.status == Enums.ControlStatus.Parked);
+        }
+
+        public async Task<bool> isParkedByDTO(ControlDTO controlDTO)
+        {
+            return await _context.Controls
+                .AnyAsync(c => c.companyID == controlDTO.companyID 
+                            && c.vehicleID == controlDTO.vehicleID
+                            && c.status == Enums.ControlStatus.Parked
+            );
+        }
     }
 }

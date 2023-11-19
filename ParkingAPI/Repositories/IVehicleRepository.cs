@@ -9,5 +9,6 @@ namespace ParkingAPI.Repositories
         public Task<Vehicle> remove(long id);
         public Task<List<Vehicle>> get();
         public Task<Vehicle> get(long id);
+        public Task<bool> exists(long id);
     }
 }

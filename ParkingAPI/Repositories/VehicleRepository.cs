@@ -46,5 +46,10 @@ namespace ParkingAPI.Repositories
         {
             return await _context.Vehicles.FirstOrDefaultAsync(vehicle => vehicle.id == id);
         }
+
+        public async Task<bool> exists(long id)
+        {
+            return await _context.Vehicles.AnyAsync(c => c.id == id);
+        }
     }
 }
