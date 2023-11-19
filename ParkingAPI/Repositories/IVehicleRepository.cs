@@ -10,5 +10,6 @@ namespace ParkingAPI.Repositories
         public Task<List<Vehicle>> get();
         public Task<Vehicle> get(long id);
         public Task<bool> exists(long id);
+        public Task<bool> existsPlate(string plate);
     }
 }

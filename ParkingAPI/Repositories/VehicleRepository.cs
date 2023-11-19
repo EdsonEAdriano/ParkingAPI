@@ -44,12 +44,19 @@ namespace ParkingAPI.Repositories
 
         public async Task<Vehicle> get(long id)
         {
-            return await _context.Vehicles.FirstOrDefaultAsync(vehicle => vehicle.id == id);
+            return await _context.Vehicles
+                            .AsNoTracking()
+                            .FirstOrDefaultAsync(vehicle => vehicle.id == id);
         }
 
         public async Task<bool> exists(long id)
         {
             return await _context.Vehicles.AnyAsync(c => c.id == id);
+        }
+
+        public async Task<bool> existsPlate(string plate)
+        {
+            return await _context.Vehicles.AnyAsync(c => c.plate.Trim() == plate);
         }
     }
 }
