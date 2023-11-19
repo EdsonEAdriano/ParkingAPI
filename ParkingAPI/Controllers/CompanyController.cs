@@ -84,28 +84,33 @@ namespace ParkingAPI.Controllers
         }
 
         [HttpPut]
+        [Route("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] CompanyDTO companyDTO)
         {
             try
             {
-                if (!CNPJ.validateCNPJ(companyDTO.cnpj))
+                Company company = await _companyRepository.get(id);
+
+                if (company.cnpj != CNPJ.parseCNPJ(companyDTO.cnpj))
                 {
-                    _logger.LogError($"Error while adding new company. ERROR MESSAGE: CNPJ inválido; ");
-                    return BadRequest("CNPJ inválido");
+                    if (!CNPJ.validateCNPJ(companyDTO.cnpj))
+                    {
+                        _logger.LogError($"Error while adding new company. ERROR MESSAGE: CNPJ inválido; ");
+                        return BadRequest("CNPJ inválido");
+                    }
+
+
+                    if (!await _companyRepository.existsCNPJ(company.cnpj))
+                    {
+                        _logger.LogError($"Error while adding new company. ERROR MESSAGE: CNPJ already exists; ");
+                        return BadRequest("CNPJ já existe");
+                    }
                 }
 
-                Company company = new Company(id, companyDTO);
-
-                if (!await _companyRepository.existsCNPJ(company.cnpj))
-                {
-                    await _companyRepository.edit(company);
-                    return Ok(companyDTO);
-                }
-                else
-                {
-                    _logger.LogError($"Error while adding new company. ERROR MESSAGE: CNPJ already exists; ");
-                    return BadRequest("CNPJ já existe");
-                }
+               
+                company = new Company(id, companyDTO);
+                await _companyRepository.edit(company);
+                return Ok(companyDTO);
             }
             catch (Exception e)
             {

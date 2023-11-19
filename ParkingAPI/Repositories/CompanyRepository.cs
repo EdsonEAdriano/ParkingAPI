@@ -42,7 +42,9 @@ namespace ParkingAPI.Repositories
 
         public async Task<Company> get(long id)
         {
-            return await _context.Companies.FirstOrDefaultAsync(company => company.id == id);
+            return await _context.Companies
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(company => company.id == id);
         }
 
         public async Task<bool> exists(long id)
