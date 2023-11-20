@@ -32,6 +32,14 @@ namespace ParkingAPI.Repositories
             control.status = Enums.ControlStatus.Exit;
             control.exitDate = DateTime.Now;
 
+            TimeSpan diferenceDates = control.exitDate - control.createDate;
+
+            Prices price = await _context.Prices
+                .OrderBy(c => c.hours)
+                .FirstAsync(p => p.hours >= (short)diferenceDates.Hours);
+
+            control.price = price;
+
             _context.Controls.Update(control);
             await _context.SaveChangesAsync();
 
