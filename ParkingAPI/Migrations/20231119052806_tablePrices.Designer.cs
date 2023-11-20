@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ParkingAPI.Data;
 
@@ -11,9 +12,11 @@ using ParkingAPI.Data;
 namespace ParkingAPI.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20231119052806_tablePrices")]
+    partial class tablePrices
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,8 +76,8 @@ namespace ParkingAPI.Migrations
                     b.Property<DateTime>("exitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<short?>("priceID")
-                        .HasColumnType("smallint");
+                    b.Property<double>("price")
+                        .HasColumnType("float");
 
                     b.Property<int>("status")
                         .HasColumnType("int");
@@ -85,8 +88,6 @@ namespace ParkingAPI.Migrations
                     b.HasKey("id");
 
                     b.HasIndex("companyID");
-
-                    b.HasIndex("priceID");
 
                     b.HasIndex("vehicleID");
 
@@ -152,10 +153,6 @@ namespace ParkingAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ParkingAPI.Models.Prices", "price")
-                        .WithMany()
-                        .HasForeignKey("priceID");
-
                     b.HasOne("ParkingAPI.Models.Vehicle", "vehicle")
                         .WithMany()
                         .HasForeignKey("vehicleID")
@@ -163,8 +160,6 @@ namespace ParkingAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("company");
-
-                    b.Navigation("price");
 
                     b.Navigation("vehicle");
                 });

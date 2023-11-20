@@ -12,5 +12,18 @@ namespace ParkingAPI.Data
         public DbSet<Company> Companies { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<Control> Controls { get; set; }
+        public DbSet<Prices> Prices { get; set; }
+
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Control>()
+                .HasOne(p => p.price)
+                .WithMany()
+                .HasForeignKey(p => p.priceID) 
+                .IsRequired(false);
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

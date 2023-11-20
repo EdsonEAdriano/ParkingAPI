@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ParkingAPI.Data;
 
@@ -11,9 +12,11 @@ using ParkingAPI.Data;
 namespace ParkingAPI.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20231120031112_alterTableControlPrice2")]
+    partial class alterTableControlPrice2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,6 +77,7 @@ namespace ParkingAPI.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<short?>("priceID")
+                        .IsRequired()
                         .HasColumnType("smallint");
 
                     b.Property<int>("status")
@@ -154,7 +158,9 @@ namespace ParkingAPI.Migrations
 
                     b.HasOne("ParkingAPI.Models.Prices", "price")
                         .WithMany()
-                        .HasForeignKey("priceID");
+                        .HasForeignKey("priceID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ParkingAPI.Models.Vehicle", "vehicle")
                         .WithMany()
